@@ -19,7 +19,7 @@ def makePath(path, file):
 import HEKA_Reader_MAIN as HEKA
 from HekaHelpers import HekaBundleInfo
 DataPath = 'D:\\Mhu\\SourceCode\\patchViewer_git\\Tests\\data\\'
-testFile = '190314s1c2r2.dat' #'180514s1c1r1.dat'
+testFile = '180514s1c1r1.dat'
 
 testFile_noExit = '180514.dat'
 testFile_wrongExt = '180514c1r1.date'
