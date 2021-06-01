@@ -735,36 +735,6 @@ class Data(object):
         else:
             data = np.fromfile(fh, count=trace.DataPoints, dtype=dtype)
         return data * trace.DataScaler + trace.ZeroData    
-    
-#class StimWave(object):
-#    ''' generate stim wave according to the .pgf file'''
-#    ''' For now, this only applies to step wise simple stimuli'''
-#    def __init__(self, bundle,index):
-#        stimTree = bundle.stim
-#        assert len(index) < 3 ## Do this at channel level
-#        stimID = index[0]  ## index for stimulation record
-#        iC =  index[1]  ## index for channel record
-#        iSweep = index[2]
-#        chanRecord = stimTree[stimID].children[iC]
-#        sampleInteval = stimTree[stimID].SampleInterval
-#        stim = []
-#        cumSamples = 0  ## cumulated stimulation time
-#        cumTime = 0
-#        stimInfo = []
-#        for seg in chanRecord.children: ## go through segment one by one
-#            segSamples = int(seg.Duration/sampleInteval)  ## convert into time
-##            segV0 = seg.Voltage  ## initial voltage
-#            seg_V = seg.Voltage + iSweep*seg.DeltaVIncrement*seg.DeltaVFactor
-#
-##            seg_dT = seg.DeltaTIncrement*seg.DeltaTFactor ## probably not necessary for stepwise type of stimuli
-#            stim.append(np.ones((segSamples,))*seg_V)
-#            stim_ = {'start': cumSamples, 'end': cumSamples + segSamples, 
-#                     'duration': seg.Duration, 'ampitude': seg_V,  'sampleInteval': sampleInteval}
-#            cumSamples = cumSamples + segSamples
-#            cumTime = cumTime + seg.Duration
-#            stimInfo.append(stim_)
-#        time = np.arange(cumSamples)*sampleInteval
-#        return time, stim, stimInfo
   
 class  StimulationRecord(TreeNode):
     '''
@@ -1135,56 +1105,6 @@ class Bundle(object):
         time = np.arange(cumSamples)*sampleInteval
 #        stimInfo = pd.DataFrame(stimInfo)
         return time, stim,stimInfo
-    
-#    def stim0(self, index):
-#        '''
-#        Pgf@stimulation == Pul@series. All stimulation are collapase into the pgf tree,
-#        so if there are multiple groups in Pulse tree, then the series index
-#        need to be accumulated from the first group, rather than from that group
-#        level.
-#        '''
-#        stimTree = self.pgf
-#        assert len(index) >= 3 ## Do this at channel level
-##        stimID = index[0]  ## index for stimulation record. This is the group level!
-##        iC =  index[1]  ## index for channel record
-##        iSweep = index[2]
-#        stimID = index[0]  ## index for stimulation record. This is the accumulated series level!
-#        iC =  0 ## index for channel record
-#        iSweep = index[2]
-#        chanRecord = stimTree.children[stimID].children[iC]
-#        DacMode = int.from_bytes(chanRecord.DacMode, byteorder =  self.endian)  ## relative or abolute
-#        stim2dac = ['StimScale','StimScale, Relative','FileTemplate','FileTemplate, Relative']
-#        stim2dacType = stim2dac[DacMode]
-#        Holding = chanRecord.Holding *1000.0  ## pA
-#        sampleInteval = stimTree.children[stimID].SampleInterval
-#        stim = []
-#        cumSamples = 0  ## cumulated stimulation time
-#        stimInfo = []
-#        if len(index) ==4:
-#            traceRecord = self.pul[index[0]][index[1]][index[2]][index[3]]
-##            print(traceRecord)
-#            sealResistance = traceRecord.SealResistance
-#        else:
-#            sealResistance = np.nan
-#        for seg in chanRecord.children: ## go through segment one by one
-#            segSamples = int(seg.Duration/sampleInteval)
-##            segV0 = seg.Voltage  ## initial voltage
-#            if DacMode == 1:  ## relative mode
-#                seg_V = 1000.0*(seg.Voltage + iSweep*seg.DeltaVIncrement*seg.DeltaVFactor) +Holding
-#            else:
-#                seg_V = 1000.0*(seg.Voltage + iSweep*seg.DeltaVIncrement*seg.DeltaVFactor)
-#            
-##            seg_dT = seg.DeltaTIncrement*seg.DeltaTFactor ## probably not necessary for stepwise type of stimuli
-#            stim.extend(np.ones((segSamples,))*seg_V)
-#            stim_ = {'start': cumSamples, 'end': cumSamples + segSamples, 
-#             'duration': seg.Duration, 'ampitude': seg_V,  'sampleInteval': sampleInteval,
-#             'Vholding': Holding, 'Stim2Dac':stim2dacType,'sealresistance':sealResistance}
-#            cumSamples = cumSamples + segSamples
-#            stimInfo.append(stim_)
-#            
-#        time = np.arange(cumSamples)*sampleInteval
-##        stimInfo = pd.DataFrame(stimInfo)
-#        return time, stim,stimInfo
-    
+            
     def __repr__(self):
         return "Bundle(%r)" % list(self.catalog.keys())
