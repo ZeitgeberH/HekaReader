@@ -3,7 +3,7 @@
 
 [![contributions welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg?style=flat)](https://github.com/ZeitgeberH/HekaReader/issues)&nbsp;
 
-
+[![DOI](https://zenodo.org/badge/371837554.svg)](https://zenodo.org/badge/latestdoi/371837554)
 
 ### Usage
 ```python
